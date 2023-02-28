@@ -1,0 +1,21 @@
+{
+    "background": {
+        "service_worker": "background.js"
+    },
+    "description": "…",
+    "icons": {
+        "48": "gba.png",
+        "96": "gba.png"
+    },
+    "permissions": [
+        "fileBrowserHandler"
+    ],
+    "manifest_version": 3,
+    "name": "gba-ext",
+    "action": {
+        "default_icon": "gba.png",
+        "default_title": "这不是gba",
+        "default_popup": "popup-t3.html"
+    },
+    "version": "0.1"
+}
