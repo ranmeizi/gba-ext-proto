@@ -30,16 +30,6 @@ chrome.runtime.onConnect.addListener(function (port) {
 
   port.onMessage.addListener(function ({ type }) {
     if (type === "reqFrame") {
-      //   const a = Uint32Array.from(gba.video.renderPath.pixelData.data.buffer);
-      //   const b = encode(a);
-      //   if (b) {
-      //     console.log(b);
-      //   }
-      //   connection &&
-      //     connection.postMessage({
-      //       type: "screen",
-      //       data: gba.video.renderPath.pixelData.data,
-      //     });
       connection &&
         connection.postMessage({
           type: "screen",
