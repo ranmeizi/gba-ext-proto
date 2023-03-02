@@ -8,9 +8,7 @@ class IdbTools {
 
   migrate = new MigrateVersion();
 
-  constructor() {
-    this.init();
-  }
+  initialization = this.init()
 
   async init() {
     const request = indexedDB.open(IdbTools.dbName, IdbTools.version);
@@ -25,7 +23,6 @@ class IdbTools {
       };
 
       request.onerror = (e) => {
-        console.log(e);
         reject();
       };
     });

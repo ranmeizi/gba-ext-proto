@@ -23,10 +23,11 @@
 
 class GbaController extends IdbTools {
   static DEFAULT_ROOM_UNAME = "#default";
-  
+
   /**
    * 存储rom
    * @param {ArrayBuffer} buffer 
+   * @returns {Rom} 返回存储的rom
    */
   addRom(buffer) {
     const md5 = "";
@@ -38,13 +39,46 @@ class GbaController extends IdbTools {
    * 删除rom
    * @param {string} rKey ROM md5
    */
-  delRom(rKey) {}
+  delRom(rKey) { }
 
   /**
    * 按名称查询rom
    * @param {string} name rom名 模糊查询
+   * @returns {Promise<Rom[]>}
    */
-  queryRomByName(name) {}
+  async queryRomByName(name) {
+    await this.initialization
+
+    const transaction = this.db.transaction(["roms"], "readonly");
+
+    if (!name) {
+      return this.#queryAllRom(transaction)
+    }
+
+
+    const objectStore = transaction.objectStore('roms')
+
+    // 使用游标
+    const request = objectStore.openCursor();
+
+    return new Promise((resolve, reject) => {
+      let result = []
+
+      request.onsuccess = (event) => {
+        const cursor = event.target.result;
+        if (cursor) {
+          if (cursor.value.name.indexOf(name)) {
+            result.push(cursor.value)
+          }
+          cursor.continue();
+        } else {
+          // no more results
+        }
+      };
+      transaction.oncomplete = () => resolve(result)
+      transaction.onerror = () => reject()
+    })
+  }
 
   /**
    * 更新记忆卡
@@ -53,25 +87,38 @@ class GbaController extends IdbTools {
    * @param {string} rKey ROM md5
    * @param {string} uName 用户名
    */
-  updateMemo(rKey, uName) {}
+  updateMemo(rKey, uName) { }
 
   /**
    * 按Rom key和用户名创建记忆卡
    * @param {string} rKey ROM md5
    * @param {string} uName 用户名
    */
-  createUserMemo(rKey, uName) {}
+  createUserMemo(rKey, uName) { }
 
   /**
    * 删除memo
    * @param {string} rKey ROM md5
    */
-  delRom(rKey) {}
+  delRom(rKey) { }
 
   /**
    * 
    */
-  #toMd5(){
+  #toMd5() {
 
+  }
+
+  #queryAllRom(transaction) {
+    const romOS = transaction.objectStore('roms')
+    return new Promise((resolve, reject) => {
+      let result = []
+      const request = romOS.getAll()
+      request.onsuccess = function (event) {
+        result = event.target.result
+      }
+      transaction.oncomplete = () => resolve(result)
+      transaction.onerror = () => reject()
+    })
   }
 }
