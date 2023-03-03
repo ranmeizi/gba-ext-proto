@@ -6,10 +6,13 @@ const port = chrome.runtime.connect(chrome.runtime.id);
 
 class PopupView extends React.Component {
   state = {
-    currentGame: "",
+    currentGame: undefined,
   };
   componentDidMount() {
     // 向 localstorage 查询插入的 rom
+    chrome.storage.local.get(ROM_STORAGE_KEY).then((res) => {
+      this.setState({ currentGame: res?.[ROM_STORAGE_KEY] });
+    });
   }
 
   onButtonClick() {

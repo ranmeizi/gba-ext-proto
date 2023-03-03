@@ -8,7 +8,11 @@ class IdbTools {
 
   migrate = new MigrateVersion();
 
-  initialization = this.init()
+  initialization = Promise.reject();
+
+  constructor() {
+    this.initialization = this.init();
+  }
 
   async init() {
     const request = indexedDB.open(IdbTools.dbName, IdbTools.version);
@@ -19,10 +23,12 @@ class IdbTools {
       // 打开成功
       request.onsuccess = () => {
         this.db = request.result;
+        console.log("123");
         resolve();
       };
 
       request.onerror = (e) => {
+        console.log("456");
         reject();
       };
     });

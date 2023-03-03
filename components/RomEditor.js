@@ -1,13 +1,19 @@
 class RoomEditor extends React.Component {
   input = React.createRef();
-  componentDidMount() {
-    this.getData()
 
+  state = {
+    list: [],
+    currentRom: localStorage.getItem(ROM_STORAGE_KEY),
+  };
+
+  componentDidMount() {
+    this.getData();
   }
 
   async getData() {
-    const list = await gbaStorage.queryRomByName()
-    console.log(list, '??')
+    const list = await gbaStorage.queryRomByName();
+
+    this.setState({ list });
   }
 
   onUploadBtnClick() {
@@ -15,32 +21,140 @@ class RoomEditor extends React.Component {
   }
 
   async onInputChange(e) {
-    console.log(e.target.files[0])
-    const name = e.target.files[0].name
-    const arrayBuffer = await readFileAsArrayBuffer(e.target.files[0])
-    const wa = CryptoJS.lib.WordArray.create(arrayBuffer)
-    // console.log(name, arrayBuffer, CryptoJS.MD5.encrypt(arrayBuffer).toString())
-    console.log(CryptoJS.MD5(wa).toString())
+    try {
+      await gbaStorage.addRom(e.target.files[0]);
+      alert("添加成功");
+
+      // 重新获取列表
+      this.getData();
+    } catch (e) {
+      alert("添加失败");
+      console.warn("add rom", e);
+    }
   }
 
-  onSearch() {
+  onSearch() {}
 
+  /**
+   * 传递 rom md5 值至 记忆卡管理
+   */
+  openMemoManager(rKey) {}
+
+  /**
+   * 插入 rom 卡
+   * 1. 在 storage.local 中存储 rKey
+   * 2. 通知 background 加载 rom
+   */
+  async putRomInGba(rKey) {
+    this.setState({ currentRom: rKey });
+    console.log(chrome);
+    await chrome.storage.local.set({ [ROM_STORAGE_KEY]: rKey });
+
+    chrome.runtime.sendMessage({
+      type: "RomChange",
+    });
   }
+
+  /**
+   * 按照当前用户存储当前rom记忆卡
+   * 1. 获取当前用户
+   * 2. 通知 background 也
+   */
+  updateMemoCard() {}
 
   render() {
     const e = React.createElement;
-    return e("div", {}, [
-      e("div", { className: 'input-group mb-3' }, [
-        e("button", { className: 'btn btn-outline-secondary', onClick: this.onUploadBtnClick.bind(this) }, "上传 Rom"),
-        e("input", { className: 'form-control', type: 'text' }),
+    const { list, currentRom } = this.state;
+    return e("div", { className: "mt-3" }, [
+      e("div", { className: "input-group mb-3" }, [
+        e(
+          "button",
+          {
+            className: "btn btn-outline-secondary",
+            onClick: this.onUploadBtnClick.bind(this),
+          },
+          "上传 Rom"
+        ),
+        e("input", { className: "form-control", type: "text" }),
         e("input", {
           ref: this.input,
           type: "file",
           style: { display: "none" },
-          onChange: this.onInputChange.bind(this)
+          onChange: this.onInputChange.bind(this),
         }),
-        e("button", { className: 'btn btn-outline-secondary', onClick: this.onSearch.bind(this) }, "搜索")
+        e(
+          "button",
+          {
+            className: "btn btn-outline-secondary",
+            onClick: this.onSearch.bind(this),
+          },
+          "搜索"
+        ),
       ]),
+      e(
+        "small",
+        { className: "text-muted" },
+        "注意！！ 切换 rom 会丢失当前存档，请确保切换 rom 之前保存您的记忆卡 (程序不会自动帮您保存，起码这版本不会)"
+      ),
+      e(
+        "div",
+        { className: "list-group" },
+        list.map((item) => {
+          return e(
+            "a",
+            {
+              className: `list-group-item list-group-item-action ${
+                currentRom === item.md5 ? "bg-primary-subtle" : ""
+              }`,
+            },
+            [
+              e("div", { className: "d-flex w-100 justify-content-between" }, [
+                e("h5", { className: "mb-1" }, item.name),
+                e("small", { className: "mb-1" }, "3 days ago"),
+              ]),
+              e("div", { className: "mb-1" }, [
+                e(
+                  "button",
+                  { className: "btn btn-primary btn-sm me-2" },
+                  "查看记忆卡"
+                ),
+                // 当前rom 才可以保存记忆卡
+                ...(currentRom === item.md5
+                  ? [
+                      e(
+                        "button",
+                        { className: "btn btn-primary btn-sm me-2" },
+                        "保存记忆卡"
+                      ),
+                      e(
+                        "button",
+                        {
+                          className: "btn btn-warning btn-sm me-2",
+                          onClick: () => this.putRomInGba(""),
+                        },
+                        "弹出Rom"
+                      ),
+                    ]
+                  : [
+                      e(
+                        "button",
+                        { className: "btn btn-danger btn-sm me-2" },
+                        "删除Rom"
+                      ),
+                      e(
+                        "button",
+                        {
+                          className: "btn btn-success btn-sm me-2",
+                          onClick: () => this.putRomInGba(item.md5),
+                        },
+                        "选择Rom"
+                      ),
+                    ]),
+              ]),
+            ]
+          );
+        })
+      ),
     ]);
   }
 }
@@ -51,15 +165,12 @@ function readFileAsArrayBuffer(file) {
   return new Promise((resolve, reject) => {
     reader.onload = function (e) {
       resolve(e.target.result);
-    }
-    reader.onerror = reject
+    };
+    reader.onerror = reject;
     reader.readAsArrayBuffer(file);
-  })
+  });
 }
 
 /**
- * <div class="input-group mb-3">
-  <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
-  <button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
-</div>
+ <button type="button" class="btn btn-outline-primary">Primary</button>
  */

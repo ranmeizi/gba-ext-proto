@@ -8,7 +8,7 @@
         "96": "gba.png"
     },
     "permissions": [
-        "fileBrowserHandler"
+        "storage"
     ],
     "manifest_version": 3,
     "name": "gba-ext",
