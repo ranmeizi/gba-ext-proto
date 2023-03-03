@@ -28,7 +28,7 @@ class PopupView extends React.Component {
       e(
         "div",
         { key: "a" },
-        e("button", { onClick: this.onButtonClick }, "插入rom")
+        e("button", { onClick: this.onButtonClick }, "Setting")
       ),
       e("div", { key: "b" }, e("div", {}, "您在玩？")),
       // 看background有没有正在运行的游戏

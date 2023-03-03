@@ -3,11 +3,18 @@ class RoomEditor extends React.Component {
 
   state = {
     list: [],
-    currentRom: localStorage.getItem(ROM_STORAGE_KEY),
+    currentRom: "",
   };
 
   componentDidMount() {
     this.getData();
+
+    // 当前rom
+    chrome.storage.local.get(ROM_STORAGE_KEY).then((res) => {
+      this.setState({
+        currentRom: res[ROM_STORAGE_KEY],
+      });
+    });
   }
 
   async getData() {
@@ -47,7 +54,7 @@ class RoomEditor extends React.Component {
    */
   async putRomInGba(rKey) {
     this.setState({ currentRom: rKey });
-    console.log(chrome);
+
     await chrome.storage.local.set({ [ROM_STORAGE_KEY]: rKey });
 
     chrome.runtime.sendMessage({
@@ -56,11 +63,31 @@ class RoomEditor extends React.Component {
   }
 
   /**
+   * 删除 rom 存储
+   */
+  async delRom(rKey) {
+    if (confirm("确定删除 rom 吗？")) {
+      console.log("QUEDING", gbaStorage.delRom);
+      await gbaStorage.delRom(rKey);
+      this.getData();
+    }
+  }
+
+  /**
    * 按照当前用户存储当前rom记忆卡
    * 1. 获取当前用户
    * 2. 通知 background 也
    */
-  updateMemoCard() {}
+  updateMemoCard() {
+    chrome.runtime.sendMessage(
+      {
+        type: "SaveMemo",
+      },
+      function () {
+        alert("保存成功");
+      }
+    );
+  }
 
   render() {
     const e = React.createElement;
@@ -115,7 +142,7 @@ class RoomEditor extends React.Component {
               e("div", { className: "mb-1" }, [
                 e(
                   "button",
-                  { className: "btn btn-primary btn-sm me-2" },
+                  { className: "btn btn-primary btn-sm me-2", disabled: true },
                   "查看记忆卡"
                 ),
                 // 当前rom 才可以保存记忆卡
@@ -123,7 +150,10 @@ class RoomEditor extends React.Component {
                   ? [
                       e(
                         "button",
-                        { className: "btn btn-primary btn-sm me-2" },
+                        {
+                          className: "btn btn-primary btn-sm me-2",
+                          onClick: this.updateMemoCard.bind(this),
+                        },
                         "保存记忆卡"
                       ),
                       e(
@@ -138,7 +168,10 @@ class RoomEditor extends React.Component {
                   : [
                       e(
                         "button",
-                        { className: "btn btn-danger btn-sm me-2" },
+                        {
+                          className: "btn btn-danger btn-sm me-2",
+                          onClick: () => this.delRom(item.md5),
+                        },
                         "删除Rom"
                       ),
                       e(
@@ -170,7 +203,3 @@ function readFileAsArrayBuffer(file) {
     reader.readAsArrayBuffer(file);
   });
 }
-
-/**
- <button type="button" class="btn btn-outline-primary">Primary</button>
- */

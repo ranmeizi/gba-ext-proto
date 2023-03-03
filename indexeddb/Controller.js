@@ -23,7 +23,7 @@
  */
 
 class GbaController extends IdbTools {
-  static DEFAULT_ROOM_UNAME = "#default";
+  static DEFAULT_ROM_UNAME = "#default";
 
   /**
    * 存储rom
@@ -58,7 +58,7 @@ class GbaController extends IdbTools {
      */
     const memo = {
       rKey: md5,
-      uName: GbaController.DEFAULT_ROOM_UNAME,
+      uName: GbaController.DEFAULT_ROM_UNAME,
       arrayBuffer: undefined,
     };
 
@@ -70,12 +70,6 @@ class GbaController extends IdbTools {
       transaction.onerror = reject;
     });
   }
-
-  /**
-   * 删除rom
-   * @param {string} rKey ROM md5
-   */
-  delRom(rKey) {}
 
   /**
    * 按id查
@@ -134,13 +128,56 @@ class GbaController extends IdbTools {
   }
 
   /**
+   * 删除memo
+   * @param {string} rKey ROM md5
+   */
+  delRom(rKey) {
+    console.log(rKey, "SEJ");
+    const transaction = this.db.transaction(["roms"], "readwrite");
+
+    const objectStore = transaction.objectStore("roms");
+
+    objectStore.delete(rKey);
+
+    return new Promise((resolve, reject) => {
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = console.warn;
+    });
+  }
+
+  /**
    * 更新记忆卡
    * 1.定时调用更新记忆卡
    * 2.用户手动调用
    * @param {string} rKey ROM md5
    * @param {string} uName 用户名
    */
-  updateMemo(rKey, uName) {}
+  async updateMemo(rKey, uName, arrayBuffer) {
+    await this.initialization;
+    const transaction = this.db.transaction(["memos"], "readwrite");
+    const objectStore = transaction.objectStore("memos");
+
+    objectStore.openCursor().onsuccess = (event) => {
+      const cursor = event.target.result;
+      if (cursor) {
+        if (cursor.value.rKey === rKey && cursor.value.uName === uName) {
+          const updateData = cursor.value;
+
+          updateData.arrayBuffer = arrayBuffer;
+          cursor.update(updateData);
+        }
+
+        cursor.continue();
+      } else {
+        console.log("Entries displayed.");
+      }
+    };
+
+    return new Promise((resolve, reject) => {
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject();
+    });
+  }
 
   /**
    * 按Rom key和用户名创建记忆卡
@@ -149,11 +186,35 @@ class GbaController extends IdbTools {
    */
   createUserMemo(rKey, uName) {}
 
-  /**
-   * 删除memo
-   * @param {string} rKey ROM md5
-   */
-  delRom(rKey) {}
+  async queryMemoByRomUser(rKey, uName = GbaController.DEFAULT_ROM_UNAME) {
+    await this.initialization;
+
+    const transaction = this.db.transaction(["memos"], "readwrite");
+
+    const objectStore = transaction.objectStore("memos");
+
+    // 使用游标
+    const request = objectStore.openCursor();
+
+    return new Promise((resolve) => {
+      request.onsuccess = (event) => {
+        const cursor = event.target.result;
+        let target;
+        if (cursor) {
+          // cursor.value contains the current record being iterated through
+          // this is where you'd do something with the result
+
+          if (cursor.value.uName === uName && cursor.value.rKey === rKey) {
+            resolve(cursor.value);
+          }
+          cursor.continue();
+        } else {
+          // no more results
+          resolve();
+        }
+      };
+    });
+  }
 
   /**
    *

@@ -52,15 +52,35 @@ chrome.runtime.onConnect.addListener(function (port) {
 });
 
 // message handler
-chrome.runtime.onMessage.addListener(async function ({ type }) {
+chrome.runtime.onMessage.addListener(async function (
+  { type },
+  sender,
+  sendResponse
+) {
+  // 插rom卡
   if (type === "RomChange") {
-    const rom = await getCurrentRom();
+    await getCurrentRom();
 
-    // 加载游戏
-    currentRom = rom;
+    if (currentRom) {
+      const memo = await getMemoCard(currentRom.md5);
+
+      // 加载 memo
+      memo.arrayBuffer &&
+        runCommands.push(() => {
+          gba.setSavedata(memo.arrayBuffer);
+        });
+    }
 
     gba.reset();
     loadRomFromArrayBuffer(currentRom.arrayBuffer);
+  } else if (type === "SaveMemo") {
+    // cun
+    await gbaStorage.updateMemo(
+      currentRom.md5,
+      GbaController.DEFAULT_ROM_UNAME,
+      gba.mmu.save.buffer
+    );
+    sendResponse();
   }
 });
 
@@ -90,8 +110,17 @@ async function main() {
     loadRom("resources/bios.bin", function (bios) {
       gba.setBios(bios);
     });
-    const rom = await getCurrentRom();
-    loadRomFromArrayBuffer(rom.arrayBuffer);
+    await getCurrentRom();
+
+    if (currentRom) {
+      const memo = await getMemoCard(currentRom.md5);
+      // 加载 memo
+      memo.arrayBuffer &&
+        runCommands.push(() => {
+          gba.setSavedata(memo.arrayBuffer);
+        });
+    }
+    loadRomFromArrayBuffer(currentRom.arrayBuffer);
   }
 }
 
@@ -108,6 +137,9 @@ function loadRomFromArrayBuffer(buf) {
   });
 }
 
+/**
+ * 获取当前rom
+ */
 async function getCurrentRom() {
   const rKey = (await chrome.storage.local.get(ROM_STORAGE_KEY))[
     ROM_STORAGE_KEY
@@ -122,7 +154,12 @@ async function getCurrentRom() {
   // 从 indexeddb 中读取 rom 的 arrayBuffer
   const rom = await gbaStorage.queryRomByMd5(rKey);
 
+  currentRom = rom;
   return rom;
+}
+
+async function getMemoCard(rKey, uName = GbaController.DEFAULT_ROM_UNAME) {
+  return await gbaStorage.queryMemoByRomUser(rKey, uName);
 }
 
 main();

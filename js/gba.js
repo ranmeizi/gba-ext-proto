@@ -138,7 +138,7 @@ GameBoyAdvance.prototype.reset = function () {
 
 GameBoyAdvance.prototype.step = function () {
   while (this.doStep()) {
-    this.cpu && this.cpu.step();
+    this.cpu && this.cpu.step && this.cpu.step();
   }
 };
 

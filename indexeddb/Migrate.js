@@ -10,12 +10,14 @@ class MigrateVersion {
     // 创建rom存储 rom
     var romStore = db.createObjectStore("roms", { keyPath: "md5" });
 
-    romStore.createIndex("name", "name", { unique: false });
+    // romStore.createIndex("name", "name", { unique: false });
 
     // 创建memo存储 memo 记忆卡
     var memoStore = db.createObjectStore("memos", {
       keyPath: "id",
       autoIncrement: true,
     });
+
+    memoStore.createIndex("rKey", "rKey", { unique: false });
   }
 }
