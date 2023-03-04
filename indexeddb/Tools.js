@@ -23,12 +23,10 @@ class IdbTools {
       // 打开成功
       request.onsuccess = () => {
         this.db = request.result;
-        console.log("123");
         resolve();
       };
 
       request.onerror = (e) => {
-        console.log("456");
         reject();
       };
     });

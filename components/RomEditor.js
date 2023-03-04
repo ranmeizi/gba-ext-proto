@@ -69,6 +69,9 @@ class RoomEditor extends React.Component {
     if (confirm("确定删除 rom 吗？")) {
       await gbaStorage.delRom(rKey);
       this.getData();
+      chrome.runtime.sendMessage({
+        type: "RomChange",
+      });
     }
   }
 

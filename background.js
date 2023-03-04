@@ -47,8 +47,11 @@ chrome.runtime.onConnect.addListener(function (port) {
     }
   });
   connection = port;
-  gba.keypad.registerHandlers();
-  gba.runStable();
+  if (currentRom) {
+    gba.keypad.registerHandlers();
+    gba.runStable();
+  }
+
 });
 
 // message handler
@@ -155,6 +158,7 @@ async function getCurrentRom() {
   const rom = await gbaStorage.queryRomByMd5(rKey);
 
   currentRom = rom;
+
   return rom;
 }
 
