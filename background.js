@@ -39,7 +39,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 
   port.onMessage.addListener(async function ({ type }) {
     if (type === "reqFrame") {
-      connection &&
+      currentRom && connection &&
         connection.postMessage({
           type: "screen",
           data: gba.video.renderPath.pixelData.data.toString(),
@@ -70,7 +70,7 @@ chrome.runtime.onMessage.addListener(async function (
           gba.setSavedata(memo.arrayBuffer);
         });
     }
-
+    gba.pause();
     gba.reset();
     loadRomFromArrayBuffer(currentRom.arrayBuffer);
   } else if (type === "SaveMemo") {
@@ -119,9 +119,8 @@ async function main() {
         runCommands.push(() => {
           gba.setSavedata(memo.arrayBuffer);
         });
+      loadRomFromArrayBuffer(currentRom.arrayBuffer);
     }
-
-    loadRomFromArrayBuffer(currentRom.arrayBuffer);
   }
 }
 

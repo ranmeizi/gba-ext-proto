@@ -32,7 +32,7 @@ class PopupView extends React.Component {
         { key: "a" },
         e("div", { className: 'setting-btn', onClick: this.onButtonClick }, "Setting")
       ),
-      e("div", { className: "game-view" }, currentGame ? e(Game, { key: "game" }) : null,),
+      e("div", { className: "game-view" }, e(Game, { key: "game" })),
     ]);
   }
 }

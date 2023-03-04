@@ -9,7 +9,7 @@
     width           : 240px;
     height          : 160px;
     background-color: rgb(0, 0, 0);
-    overflow: hidden;
+    overflow        : hidden;
 }
 
 .popup-root:before {

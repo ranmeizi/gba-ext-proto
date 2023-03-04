@@ -40,12 +40,12 @@ class RoomEditor extends React.Component {
     }
   }
 
-  onSearch() {}
+  onSearch() { }
 
   /**
    * 传递 rom md5 值至 记忆卡管理
    */
-  openMemoManager(rKey) {}
+  openMemoManager(rKey) { }
 
   /**
    * 插入 rom 卡
@@ -130,9 +130,8 @@ class RoomEditor extends React.Component {
           return e(
             "a",
             {
-              className: `list-group-item list-group-item-action ${
-                currentRom === item.md5 ? "bg-primary-subtle" : ""
-              }`,
+              className: `list-group-item list-group-item-action ${currentRom === item.md5 ? "bg-primary-subtle" : ""
+                }`,
             },
             [
               e("div", { className: "d-flex w-100 justify-content-between" }, [
@@ -148,41 +147,41 @@ class RoomEditor extends React.Component {
                 // 当前rom 才可以保存记忆卡
                 ...(currentRom === item.md5
                   ? [
-                      e(
-                        "button",
-                        {
-                          className: "btn btn-primary btn-sm me-2",
-                          onClick: this.updateMemoCard.bind(this),
-                        },
-                        "保存记忆卡"
-                      ),
-                      e(
-                        "button",
-                        {
-                          className: "btn btn-warning btn-sm me-2",
-                          onClick: () => this.putRomInGba(""),
-                        },
-                        "弹出Rom"
-                      ),
-                    ]
+                    e(
+                      "button",
+                      {
+                        className: "btn btn-primary btn-sm me-2",
+                        onClick: this.updateMemoCard.bind(this),
+                      },
+                      "保存记忆卡"
+                    ),
+                    e(
+                      "button",
+                      {
+                        className: "btn btn-warning btn-sm me-2",
+                        onClick: () => this.putRomInGba(""),
+                      },
+                      "弹出Rom"
+                    ),
+                  ]
                   : [
-                      e(
-                        "button",
-                        {
-                          className: "btn btn-danger btn-sm me-2",
-                          onClick: () => this.delRom(item.md5),
-                        },
-                        "删除Rom"
-                      ),
-                      e(
-                        "button",
-                        {
-                          className: "btn btn-success btn-sm me-2",
-                          onClick: () => this.putRomInGba(item.md5),
-                        },
-                        "选择Rom"
-                      ),
-                    ]),
+                    e(
+                      "button",
+                      {
+                        className: "btn btn-danger btn-sm me-2",
+                        onClick: () => this.delRom(item.md5),
+                      },
+                      "删除Rom"
+                    ),
+                    e(
+                      "button",
+                      {
+                        className: "btn btn-success btn-sm me-2",
+                        onClick: () => this.putRomInGba(item.md5),
+                      },
+                      "选择Rom"
+                    ),
+                  ]),
               ]),
             ]
           );
