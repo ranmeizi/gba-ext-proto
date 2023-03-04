@@ -132,7 +132,6 @@ class GbaController extends IdbTools {
    * @param {string} rKey ROM md5
    */
   delRom(rKey) {
-    console.log(rKey, "SEJ");
     const transaction = this.db.transaction(["roms"], "readwrite");
 
     const objectStore = transaction.objectStore("roms");

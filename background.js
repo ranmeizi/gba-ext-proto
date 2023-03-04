@@ -39,7 +39,6 @@ chrome.runtime.onConnect.addListener(function (port) {
 
   port.onMessage.addListener(async function ({ type }) {
     if (type === "reqFrame") {
-      console.log(currentRom)
       currentRom && connection &&
         connection.postMessage({
           type: "screen",

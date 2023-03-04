@@ -2,7 +2,7 @@
 const e = React.createElement;
 
 const gbaStorage = new GbaController();
-console.log(window)
+
 /**
  * setting 页面用于
  * 1.在 localstorage 中创建用户 (先不做)

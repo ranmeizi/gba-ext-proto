@@ -67,7 +67,6 @@ class RoomEditor extends React.Component {
    */
   async delRom(rKey) {
     if (confirm("确定删除 rom 吗？")) {
-      console.log("QUEDING", gbaStorage.delRom);
       await gbaStorage.delRom(rKey);
       this.getData();
     }

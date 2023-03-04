@@ -40,7 +40,6 @@ function GameBoyAdvanceKeypad() {
 };
 
 GameBoyAdvanceKeypad.prototype.keyboardHandler = function (e) {
-	console.log('??', this)
 	var toggle = 0;
 	switch (e.keyCode) {
 		case this.KEYCODE_START:
