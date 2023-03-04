@@ -36,7 +36,10 @@ class Game extends React.Component {
       port.postMessage({ type: "reqFrame" });
     }
 
-    reqFrame();
+    setTimeout(() => {
+      reqFrame();
+    }, 0);
+    
   }
   render() {
     return e("canvas", { className: 'gba-canvas', ref: this.el, width: 240, height: 160 });
