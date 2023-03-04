@@ -15,7 +15,7 @@
     "action": {
         "default_icon": "gba.png",
         "default_title": "这不是gba",
-        "default_popup": "popup-t3.html"
+        "default_popup": "popup.html"
     },
     "version": "0.1"
 }

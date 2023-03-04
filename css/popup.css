@@ -1,0 +1,54 @@
+.popup-root {
+    padding         : 8px 16px 32px 16px;
+    background-color: rgb(45, 46, 48);
+    position        : relative;
+}
+
+.game-view {
+    padding         : 6px;
+    width           : 240px;
+    height          : 160px;
+    background-color: rgb(0, 0, 0);
+    overflow: hidden;
+}
+
+.popup-root:before {
+    position   : absolute;
+    content    : 'GAME BOY';
+    color      : #fff;
+    bottom     : 8px;
+    left       : 50%;
+    margin-left: -100px;
+    font-size  : 20px;
+    font-weight: 900;
+}
+
+.popup-root:after {
+    position   : absolute;
+    content    : 'ADVANCE';
+    color      : #fff;
+    bottom     : 8px;
+    left       : 50%;
+    margin-left: 20px;
+    font-size  : 16px;
+    font-weight: 500;
+    font-style : italic;
+}
+
+.gba-canvas {
+    background-color: rgb(83, 86, 90);
+}
+
+.setting-btn {
+    position  : relative;
+    float     : right;
+    padding   : 6px;
+    color     : #888;
+    font-size : 12px;
+    cursor    : pointer;
+    transition: color .5s;
+}
+
+.setting-btn:hover {
+    color: #99ddff;
+}

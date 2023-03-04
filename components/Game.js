@@ -3,7 +3,7 @@ class Game extends React.Component {
   componentDidMount() {
     const canvas = this.el.current;
     const ctx = canvas.getContext("2d");
-    
+
     port.onMessage.addListener(function (data) {
       if (data.type === "screen") {
         const id = new ImageData(
@@ -39,6 +39,6 @@ class Game extends React.Component {
     reqFrame();
   }
   render() {
-    return e("canvas", { ref: this.el, width: 240, height: 160 });
+    return e("canvas", { className: 'gba-canvas', ref: this.el, width: 240, height: 160 });
   }
 }

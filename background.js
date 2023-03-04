@@ -120,6 +120,7 @@ async function main() {
           gba.setSavedata(memo.arrayBuffer);
         });
     }
+
     loadRomFromArrayBuffer(currentRom.arrayBuffer);
   }
 }

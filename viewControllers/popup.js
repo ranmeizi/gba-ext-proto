@@ -23,16 +23,16 @@ class PopupView extends React.Component {
   render() {
     const e = React.createElement;
     const { currentGame } = this.state;
-    return e("div", {}, [
+    return e("div", {
+      className: 'popup-root'
+    }, [
       // list
       e(
         "div",
         { key: "a" },
-        e("button", { onClick: this.onButtonClick }, "Setting")
+        e("div", { className: 'setting-btn', onClick: this.onButtonClick }, "Setting")
       ),
-      e("div", { key: "b" }, e("div", {}, "您在玩？")),
-      // 看background有没有正在运行的游戏
-      currentGame ? e(Game, { key: "game" }) : null,
+      e("div", { className: "game-view" }, currentGame ? e(Game, { key: "game" }) : null,),
     ]);
   }
 }
