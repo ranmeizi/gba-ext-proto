@@ -35,6 +35,12 @@ chrome.runtime.onConnect.addListener(function (port) {
   port.onDisconnect.addListener(function () {
     connection = null;
     gba.pause();
+
+    gbaStorage.updateMemo(
+      currentRom.md5,
+      GbaController.DEFAULT_ROM_UNAME,
+      gba.mmu.save.buffer
+    );
   });
 
   port.onMessage.addListener(async function ({ type }) {

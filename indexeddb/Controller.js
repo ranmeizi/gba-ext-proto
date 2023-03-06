@@ -20,6 +20,7 @@
  * @property {string} rKey ROM md5
  * @property {string} uName 用户名
  * @property {string} arrayBuffer 存储文件的 arrayBuffer
+ * @property {string} [updateTime] 更新时间
  */
 
 class GbaController extends IdbTools {
@@ -60,6 +61,7 @@ class GbaController extends IdbTools {
       rKey: md5,
       uName: GbaController.DEFAULT_ROM_UNAME,
       arrayBuffer: undefined,
+      updateTime: new Date(),
     };
 
     romStore.add(rom);
@@ -163,6 +165,7 @@ class GbaController extends IdbTools {
           const updateData = cursor.value;
 
           updateData.arrayBuffer = arrayBuffer;
+          updateData.updateTime = new Date();
           cursor.update(updateData);
         }
 
