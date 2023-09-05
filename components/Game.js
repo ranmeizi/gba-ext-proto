@@ -1,3 +1,5 @@
+let lastFrameTs = Date.now();
+
 class Game extends React.Component {
   el = React.createRef();
   componentDidMount() {
@@ -6,15 +8,23 @@ class Game extends React.Component {
 
     port.onMessage.addListener(function (data) {
       if (data.type === "screen") {
+        // console.log('res', data.data)
+        // const id = new ImageData(
+        //   Uint8ClampedArray.from(data.data.split(",")),
+        //   240,
+        //   160,
+        //   { colorSpace: "srgb" }
+        // );
+        // ctx.putImageData(id, 0, 0);
         const id = new ImageData(
-          Uint8ClampedArray.from(data.data.split(",")),
+          Uint8ClampedArray.from(data.data),
           240,
           160,
           { colorSpace: "srgb" }
         );
         ctx.putImageData(id, 0, 0);
 
-        reqFrame();
+        // reqFrame();
       }
     });
 
@@ -34,12 +44,11 @@ class Game extends React.Component {
 
     function reqFrame() {
       port.postMessage({ type: "reqFrame" });
+      requestAnimationFrame(reqFrame)
     }
 
-    setTimeout(() => {
-      reqFrame();
-    }, 0);
-    
+    reqFrame()
+
   }
   render() {
     return e("canvas", { className: 'gba-canvas', ref: this.el, width: 240, height: 160 });

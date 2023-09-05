@@ -8,7 +8,7 @@ class IdbTools {
 
   migrate = new MigrateVersion();
 
-  initialization = Promise.reject();
+  initialization
 
   constructor() {
     this.initialization = this.init();
