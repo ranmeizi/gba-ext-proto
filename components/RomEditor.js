@@ -1,4 +1,4 @@
-class RoomEditor extends React.Component {
+class RomEditor extends React.Component {
   input = React.createRef();
 
   state = {
@@ -120,11 +120,6 @@ class RoomEditor extends React.Component {
           "搜索"
         ),
       ]),
-      e(
-        "small",
-        { className: "text-muted" },
-        "注意！！ 切换 rom 会丢失当前存档，请确保切换 rom 之前保存您的记忆卡 (程序不会自动帮您保存，起码这版本不会)"
-      ),
       e(
         "div",
         { className: "list-group" },

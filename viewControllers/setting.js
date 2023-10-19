@@ -50,7 +50,7 @@ class SettingView extends React.Component {
         ])
       ),
       //  container
-      e("div", { className: "container" }, e(RoomEditor)),
+      e("div", { className: "container" }, e(RomEditor)),
     ]);
   }
 }
