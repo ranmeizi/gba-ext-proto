@@ -166,10 +166,17 @@ GameBoyAdvanceKeypad.prototype.registerHandlers = function () {
 	// window.addEventListener("gamepaddisconnected", this.gamepadDisconnectHandler.bind(this), true);
 	// window.addEventListener("mozgamepaddisconnected", this.gamepadDisconnectHandler.bind(this), true);
 	// window.addEventListener("webkitgamepaddisconnected", this.gamepadDisconnectHandler.bind(this), true);
-	const _self=this
+	const _self = this
 	connection.onMessage.addListener(function ({ type, data }) {
 		if (type === 'keyEvent') {
+			data.keyCode = MY_KEYBOARD_MAP[data.keyCode]
 			_self.keyboardHandler.call(_self, data)
 		}
 	})
 };
+
+const namespace_boboan = {
+	mapKeyBoard() {
+
+	}
+}

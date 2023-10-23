@@ -127,8 +127,8 @@ class RomEditor extends React.Component {
           return e(
             "a",
             {
-              className: `list-group-item list-group-item-action ${currentRom === item.md5 ? "bg-primary-subtle" : ""
-                }`,
+              key:item.id,
+              className: `list-group-item list-group-item-action ${currentRom === item.md5 ? "bg-primary-subtle" : ""}`,
             },
             [
               e("div", { className: "d-flex w-100 justify-content-between" }, [

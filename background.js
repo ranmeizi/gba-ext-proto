@@ -22,6 +22,51 @@ const scripts = [
   "indexeddb/Controller.js",
 ];
 
+const GBA_KEYS = {
+  KEYCODE_LEFT: 37,
+  KEYCODE_UP: 38,
+  KEYCODE_RIGHT: 39,
+  KEYCODE_DOWN: 40,
+  KEYCODE_START: 13,
+  KEYCODE_SELECT: 220,
+  KEYCODE_A: 90,
+  KEYCODE_B: 88,
+  KEYCODE_L: 65,
+  KEYCODE_R: 83,
+}
+
+var MY_KEYBOARD_MAP = {
+  37: 37,
+  38: 38,
+  39: 39,
+  40: 40,
+  13: 13,
+  220: 220,
+  90: 90,
+  88: 88,
+  65: 65,
+  83: 83,
+}
+
+async function updateKeyBoard() {
+  keys = (await chrome.storage.local.get('gba_key_map'))['gba_key_map'] || GBA_KEYS
+
+  MY_KEYBOARD_MAP = getMapKey(keys)
+}
+
+function getMapKey(map) {
+  const obj = {}
+
+  Object.entries(map).forEach(([key, value]) => {
+    obj[value] = GBA_KEYS[key]
+  })
+
+  return obj
+}
+
+// 读取
+updateKeyBoard()
+
 importScripts(...scripts);
 
 let connection = null;
@@ -92,6 +137,9 @@ chrome.runtime.onMessage.addListener(async function (
       gba.mmu.save.buffer
     );
     sendResponse();
+  } else if (type === "UpdateKeyBoard") {
+    // 按键映射更新
+    updateKeyBoard()
   }
 });
 

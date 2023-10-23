@@ -9,24 +9,44 @@ const gbaStorage = new GbaController();
  * 2.在 indexeddb 中 插入 rom
  */
 class SettingView extends React.Component {
-  state = {};
+  state = {
+    current: 'rom-editor'
+  };
 
   render() {
     const e = React.createElement;
+    const { current } = this.state
     return e("div", {}, [
       //  nav
       e(
         "nav",
-        { className: "navbar bg-body-tertiary" },
+        { className: "navbar navbar-expand-lg bg-body-tertiary" },
         e("div", { className: "container-fluid" }, [
           e(
             "div",
-            { className: "navbar-brand mb-0 h1" },
+            { key: '1', className: "navbar-brand mb-0 h1" },
             "GBA Extension Setting"
+          ),
+          e(
+            "div",
+            { key: '2', className: 'collapse navbar-collapse' },
+            e(
+              "ul",
+              { className: "navbar-nav me-auto mb-2 mb-lg-0" },
+              [
+                e('li', { key: 'rom-editor', className: 'nav-item', onClick: () => { this.setState({ current: 'rom-editor' }) } },
+                  e('a', { className: `nav-link ${current === 'rom-editor' ? 'active' : ''}` }, 'Rom设置')
+                ),
+                e('li', { key: 'key-editor', className: 'nav-item', onClick: () => { this.setState({ current: 'key-editor' }) } },
+                  e('a', { className: `nav-link ${current === 'key-editor' ? 'active' : ''}` }, '键盘设置')
+                )
+              ]
+            )
           ),
           e(
             "a",
             {
+              key:'3',
               className: "navbar-brand",
               href: "https://github.com/ranmeizi/gba-ext-proto",
               style: {
@@ -39,6 +59,7 @@ class SettingView extends React.Component {
               },
             },
             e("img", {
+              key:'4',
               src: "/resources/github-icon.jpg",
               style: {
                 height: "30px",
@@ -50,7 +71,10 @@ class SettingView extends React.Component {
         ])
       ),
       //  container
-      e("div", { className: "container" }, e(RomEditor)),
+      e("div", { className: "container" }, [
+        this.state.current === 'rom-editor' && e(RomEditor,{key:'rom'}),
+        this.state.current === 'key-editor' && e(KeyMapEditor,{key:'key'}),
+      ]),
     ]);
   }
 }
@@ -60,7 +84,7 @@ const root = ReactDOM.createRoot(domContainer);
 root.render(e(SettingView));
 
 /**
- * 
+ *
  * <a class="navbar-brand" href="#">
       <img src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Bootstrap" width="30" height="24">
     </a>
