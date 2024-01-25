@@ -90,11 +90,9 @@ chrome.runtime.onConnect.addListener(function (port) {
 
   port.onMessage.addListener(async function ({ type }) {
     if (type === "reqFrame") {
-      // console.log('res',gba.video.renderPath.pixelData.data)
       currentRom && connection &&
         connection.postMessage({
           type: "screen",
-          // data: gba.video.renderPath.pixelData.data.toString(),
           data: Array.from(gba.video.renderPath.pixelData.data)
         });
     }

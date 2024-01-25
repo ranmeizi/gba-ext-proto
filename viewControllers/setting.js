@@ -35,10 +35,10 @@ class SettingView extends React.Component {
               { className: "navbar-nav me-auto mb-2 mb-lg-0" },
               [
                 e('li', { key: 'rom-editor', className: 'nav-item', onClick: () => { this.setState({ current: 'rom-editor' }) } },
-                  e('a', { className: `nav-link ${current === 'rom-editor' ? 'active' : ''}` }, 'Rom设置')
+                  e('a', { className: `nav-link pointer ${current === 'rom-editor' ? 'active' : ''}` }, 'Rom设置')
                 ),
                 e('li', { key: 'key-editor', className: 'nav-item', onClick: () => { this.setState({ current: 'key-editor' }) } },
-                  e('a', { className: `nav-link ${current === 'key-editor' ? 'active' : ''}` }, '键盘设置')
+                  e('a', { className: `nav-link pointer ${current === 'key-editor' ? 'active' : ''}` }, '键盘设置')
                 )
               ]
             )
@@ -47,8 +47,9 @@ class SettingView extends React.Component {
             "a",
             {
               key:'3',
-              className: "navbar-brand",
+              className: "navbar-brand pointer",
               href: "https://github.com/ranmeizi/gba-ext-proto",
+              target:'blank',
               style: {
                 background: "black",
                 color: "#fff",

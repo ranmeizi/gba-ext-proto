@@ -8,14 +8,6 @@ class Game extends React.Component {
 
     port.onMessage.addListener(function (data) {
       if (data.type === "screen") {
-        // console.log('res', data.data)
-        // const id = new ImageData(
-        //   Uint8ClampedArray.from(data.data.split(",")),
-        //   240,
-        //   160,
-        //   { colorSpace: "srgb" }
-        // );
-        // ctx.putImageData(id, 0, 0);
         const id = new ImageData(
           Uint8ClampedArray.from(data.data),
           240,
@@ -23,8 +15,6 @@ class Game extends React.Component {
           { colorSpace: "srgb" }
         );
         ctx.putImageData(id, 0, 0);
-
-        // reqFrame();
       }
     });
 
@@ -43,7 +33,10 @@ class Game extends React.Component {
     window.addEventListener("keyup", postKeyEvent, true);
 
     function reqFrame() {
-      port.postMessage({ type: "reqFrame" });
+      try{
+        port.postMessage({ type: "reqFrame" });
+      }catch{}
+      
       requestAnimationFrame(reqFrame)
     }
 

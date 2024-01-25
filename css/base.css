@@ -67,3 +67,7 @@
 .s-end {
     align-self: flex-end;
 }
+
+.pointer{
+    cursor: pointer;
+}

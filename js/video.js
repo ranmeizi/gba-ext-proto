@@ -99,7 +99,6 @@ GameBoyAdvanceVideo.prototype.setBacking = function (backing) {
 
 GameBoyAdvanceVideo.prototype.updateTimers = function (cpu) {
 	var cycles = cpu.cycles;
-
 	if (this.nextEvent <= cycles) {
 		if (this.inHblank) {
 			// End Hblank
