@@ -37,7 +37,8 @@ class Game extends React.Component {
         port.postMessage({ type: "reqFrame" });
       }catch{}
       
-      requestAnimationFrame(reqFrame)
+      // requestAnimationFrame(reqFrame)
+      setTimeout(reqFrame, 24);
     }
 
     reqFrame()
